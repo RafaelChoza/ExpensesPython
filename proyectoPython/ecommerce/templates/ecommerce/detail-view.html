@@ -1,0 +1,42 @@
+{% include "ecommerce/messages.html" %}
+
+<h1 style="font-family: Arial, sans-serif; color: #333; text-align: center;">
+    {{ product.title }}
+</h1>
+<p style="text-align: center; font-size: 18px; color: #555;">
+    Precio: ${{ product.price }}
+</p>
+<div style="text-align: center; margin-top: 20px;">
+    <button onclick="window.location.href='{% url 'update' product.id %}'">Editar Información</button>
+</div>
+<div style="text-align: center; margin-top: 20px;">
+    <button onclick="window.location.href='/'">Regresar a la página principal</button>
+</div>
+<div style="text-align: center; margin-top: 20px;">
+    <button onclick="window.location.href='{% url 'delete' product.id %}'">Eliminar producto</button>
+</div>
+<style>
+    button {
+        background-color: #007BFF; /* Fondo azul */
+        color: white; /* Texto blanco */
+        border: none; /* Sin bordes */
+        border-radius: 8px; /* Bordes redondeados más grandes */
+        padding: 12px 25px; /* Espaciado más amplio */
+        font-size: 16px; /* Texto claro y grande */
+        font-weight: bold; /* Negrita en el texto */
+        cursor: pointer; /* Indicador de clic */
+        box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+        transition: all 0.3s ease; /* Animación para transiciones suaves */
+    }
+
+    button:hover {
+        background-color: #0056b3; /* Azul más oscuro al pasar el mouse */
+        transform: scale(1.05); /* Ligera ampliación al pasar el mouse */
+        box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.3); /* Más profundidad en la sombra */
+    }
+
+    button:active {
+        background-color: #003f7f; /* Aún más oscuro al hacer clic */
+        transform: scale(0.98); /* Efecto de "presionar" */
+    }
+</style>

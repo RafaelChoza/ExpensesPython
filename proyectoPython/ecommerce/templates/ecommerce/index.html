@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Finanzas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f9;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .ingreso {
+            border-left: 15px solid #28a745;
+        }
+        .gasto {
+            border-left: 15px solid #dc3545;
+        }
+        a {
+            color: #0056b3;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .add-button {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 10px 15px;
+            background-color: #0056b3;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .add-button:hover {
+            background-color: #004494;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 5px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+                   }
+        .modal-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal-button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Balance: ${{ balance }}</h1>
+    <h2>Ingresos</h2>
+    <p class= "totalIngresos">Catidad total de Ingresos ${{ total_ingresos }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Fecha</th>
+                <th>Categoría</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ingreso in ingresos %}
+                <tr class="ingreso">
+                    <td>{{ ingreso.descripcion }}</td>
+                    <td>${{ ingreso.cantidad }}</td>
+                    <td>{{ ingreso.fecha }}</td>
+                    <td>{{ ingreso.categoria }}</td>
+                    <td>
+                        <a href="{% url 'editar_ingreso' ingreso.pk %}">Editar</a>
+                        <a href="#" class="delete-link" data-url="{% url 'eliminar_ingreso' ingreso.pk %}">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a class="add-button" href="{% url 'agregar_ingreso' %}">Agregar Ingreso</a>
+
+    <h2>Gastos</h2>
+    <p class= "totalGastos">Catidad total de Gastos ${{ total_gastos }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Fecha</th>
+                <th>Categoría</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for gasto in gastos %}
+                <tr class="gasto">
+                    <td>{{ gasto.descripcion }}</td>
+                    <td>${{ gasto.cantidad }}</td>
+                    <td>{{ gasto.fecha }}</td>
+                    <td>{{ gasto.categoria }}</td>
+                    <td>
+                        <a href="{% url 'editar_gasto' gasto.pk %}">Editar</a>
+                        <a href="#" class="delete-link" data-url="{% url 'eliminar_gasto' gasto.pk %}">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a class="add-button" href="{% url 'agregar_gasto' %}">Agregar Gasto</a>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>¿Estás seguro de que deseas eliminar este elemento?</p>
+            <button id="confirmDelete" class="modal-button">Eliminar</button>
+        </div>
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var deleteLinks = document.querySelectorAll(".delete-link");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // Get the confirm delete button
+        var confirmDelete = document.getElementById("confirmDelete");
+
+        var deleteUrl = "";
+
+        // When the user clicks on a delete link, open the modal
+        deleteLinks.forEach(function(link) {
+            link.onclick = function(event) {
+                event.preventDefault();
+                deleteUrl = this.getAttribute("data-url");
+                modal.style.display = "block";
+            }
+        });
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks on the confirm delete button, redirect to the delete URL
+        confirmDelete.onclick = function() {
+            window.location.href = deleteUrl;
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

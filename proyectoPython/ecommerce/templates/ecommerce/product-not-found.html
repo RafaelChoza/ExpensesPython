@@ -1,0 +1,46 @@
+{% include "ecommerce/messages.html" %}
+
+<h1 style="font-family: Arial, sans-serif; color: #FF5733; text-align: center; margin-top: 50px;">
+    El producto con ese ID no existe
+</h1>
+<style>
+    h1 {
+        font-size: 28px; /* Tamaño de fuente grande */
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Sombra en el texto */
+        padding: 20px; /* Espaciado interno para dar aire */
+        background-color: #FFE6E6; /* Fondo suave en color rosado */
+        border: 2px solid #FF5733; /* Borde con el mismo color que el texto */
+        border-radius: 10px; /* Bordes redondeados */
+        max-width: 600px; /* Ancho máximo */
+        margin: 0 auto; /* Centrar horizontalmente */
+    }
+</style>
+
+<div style="text-align: center; margin-top: 20px;">
+    <button onclick="window.location.href='/'">Regresar a la página principal</button>
+</div>
+<style>
+    button {
+        background-color: #007BFF; /* Fondo azul */
+        color: white; /* Texto blanco */
+        border: none; /* Sin bordes */
+        border-radius: 8px; /* Bordes redondeados más grandes */
+        padding: 12px 25px; /* Espaciado más amplio */
+        font-size: 16px; /* Texto claro y grande */
+        font-weight: bold; /* Negrita en el texto */
+        cursor: pointer; /* Indicador de clic */
+        box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+        transition: all 0.3s ease; /* Animación para transiciones suaves */
+    }
+
+    button:hover {
+        background-color: #0056b3; /* Azul más oscuro al pasar el mouse */
+        transform: scale(1.05); /* Ligera ampliación al pasar el mouse */
+        box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.3); /* Más profundidad en la sombra */
+    }
+
+    button:active {
+        background-color: #003f7f; /* Aún más oscuro al hacer clic */
+        transform: scale(0.98); /* Efecto de "presionar" */
+    }
+</style>
