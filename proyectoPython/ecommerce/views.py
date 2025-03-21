@@ -106,11 +106,24 @@ from .forms import IngresoForm, GastoForm
 
 
 def index(request):
-    ingresos = Ingreso.objects.all()
-    gastos = Gasto.objects.all()
+    query = request.GET.get('q')
+    if query:
+        ingresos = Ingreso.objects.filter(
+            Q(descripcion__icontains=query) | 
+            Q(categoria__icontains=query)
+        )
+        gastos = Gasto.objects.filter(
+            Q(descripcion__icontains=query) | 
+            Q(categoria__icontains=query)
+        )
+    else:
+        ingresos = Ingreso.objects.all()
+        gastos = Gasto.objects.all()
+
     total_ingresos = sum(ingreso.cantidad for ingreso in ingresos)
     total_gastos = sum(gasto.cantidad for gasto in gastos)
-    balance = sum(ingreso.cantidad for ingreso in ingresos) - sum(gasto.cantidad for gasto in gastos)
+    balance = total_ingresos - total_gastos
+
     context = {
         'total_ingresos': total_ingresos,
         'total_gastos': total_gastos,
@@ -118,8 +131,7 @@ def index(request):
         'gastos': gastos, 
         'balance': balance
     }
-    template = 'ecommerce/index.html'
-    return render(request, template, context)
+    return render(request, 'ecommerce/index.html', context)
 
 def agregar_ingreso(request):
     if request.method == 'POST':
@@ -172,3 +184,10 @@ def eliminar_gasto(request, pk):
     gasto = Gasto.objects.get(pk=pk)
     gasto.delete()
     return redirect('index')
+
+def eliminar_todo(request):
+    if request.method == 'POST':
+        Ingreso.objects.all().delete()
+        Gasto.objects.all().delete()
+        return redirect('index')
+    return render(request, 'ecommerce/eliminar_todo.html')

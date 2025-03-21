@@ -2,15 +2,19 @@
 <html>
 <head>
     <title>Finanzas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'JetBrains Mono', sans-serif;
             background-color: #f4f4f9;
             color: #333;
             margin: 0;
             padding: 20px;
+            position: relative; /* Asegúrate de que el contenedor principal tenga position: relative; */
         }
-        h1, h2 {
+        {
             color: #0056b3;
         }
         table {
@@ -20,8 +24,8 @@
         }
         th, td {
             padding: 10px;
-            border: 1px solid #ddd;
-            text-align: left;
+            border: 2px solid #ddd;
+            text-align: center;
         }
         th {
             background-color: #f4f4f9;
@@ -36,12 +40,27 @@
             border-left: 15px solid #dc3545;
         }
         a {
-            color: #0056b3;
             text-decoration: none;
             margin-left: 10px;
         }
-        a:hover {
-            text-decoration: underline;
+        .edit-button, .delete-button {
+            padding: 5px 10px;
+            border-radius: 3px;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .edit-button {
+            background-color: #007bff;
+        }
+        .edit-button:hover {
+            background-color: #0056b3;
+        }
+        .delete-button {
+            background-color: #dc3545;
+        }
+        .delete-button:hover {
+            background-color: #c82333;
         }
         .add-button {
             display: inline-block;
@@ -54,6 +73,18 @@
         }
         .add-button:hover {
             background-color: #004494;
+        }
+        .delete-all-button {
+            background-color: #dc3545;
+            font-size: 20px;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 20px;
         }
         /* Modal styles */
         .modal {
@@ -89,7 +120,7 @@
         .close:focus {
             color: black;
             text-decoration: none;
-                   }
+        }
         .modal-button {
             background-color: #dc3545;
             color: white;
@@ -104,9 +135,15 @@
     </style>
 </head>
 <body>
+     <!-- Botón para eliminar todo -->
+     <button class="delete-all-button" onclick="openDeleteAllModal()">Eliminar Todo</button>
+    <form method="GET" action="{% url 'index' %}">
+        <input type="text" name="q" placeholder="Buscar ingreso o gasto...">
+        <button type="submit">Buscar</button>
+    </form>
     <h1>Balance: ${{ balance }}</h1>
     <h2>Ingresos</h2>
-    <p class= "totalIngresos">Catidad total de Ingresos ${{ total_ingresos }}</p>
+    <p class="totalIngresos">Cantidad total de Ingresos: ${{ total_ingresos }}</p>
     <table>
         <thead>
             <tr>
@@ -125,8 +162,8 @@
                     <td>{{ ingreso.fecha }}</td>
                     <td>{{ ingreso.categoria }}</td>
                     <td>
-                        <a href="{% url 'editar_ingreso' ingreso.pk %}">Editar</a>
-                        <a href="#" class="delete-link" data-url="{% url 'eliminar_ingreso' ingreso.pk %}">Eliminar</a>
+                        <a href="{% url 'editar_ingreso' ingreso.pk %}" class="edit-button">Editar</a>
+                        <a href="#" class="delete-link delete-button" data-url="{% url 'eliminar_ingreso' ingreso.pk %}">Eliminar</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -135,7 +172,7 @@
     <a class="add-button" href="{% url 'agregar_ingreso' %}">Agregar Ingreso</a>
 
     <h2>Gastos</h2>
-    <p class= "totalGastos">Catidad total de Gastos ${{ total_gastos }}</p>
+    <p class="totalGastos">Cantidad total de Gastos: ${{ total_gastos }}</p>
     <table>
         <thead>
             <tr>
@@ -154,14 +191,16 @@
                     <td>{{ gasto.fecha }}</td>
                     <td>{{ gasto.categoria }}</td>
                     <td>
-                        <a href="{% url 'editar_gasto' gasto.pk %}">Editar</a>
-                        <a href="#" class="delete-link" data-url="{% url 'eliminar_gasto' gasto.pk %}">Eliminar</a>
+                        <a href="{% url 'editar_gasto' gasto.pk %}" class="edit-button">Editar</a>
+                        <a href="#" class="delete-link delete-button" data-url="{% url 'eliminar_gasto' gasto.pk %}">Eliminar</a>
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
     <a class="add-button" href="{% url 'agregar_gasto' %}">Agregar Gasto</a>
+
+   
 
     <!-- Modal -->
     <div id="myModal" class="modal">
@@ -172,9 +211,22 @@
         </div>
     </div>
 
+    <!-- Modal para eliminar todo -->
+    <div id="deleteAllModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeDeleteAllModal()">&times;</span>
+            <p>¿Estás seguro de que deseas eliminar todos los ingresos y gastos?</p>
+            <form method="POST" action="{% url 'eliminar_todo' %}">
+                {% csrf_token %}
+                <button type="submit" class="modal-button">Eliminar Todo</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         // Get the modal
         var modal = document.getElementById("myModal");
+        var deleteAllModal = document.getElementById("deleteAllModal");
 
         // Get the button that opens the modal
         var deleteLinks = document.querySelectorAll(".delete-link");
@@ -212,6 +264,17 @@
                 modal.style.display = "none";
             }
         }
+
+        // Functions to open and close the delete all modal
+        function openDeleteAllModal() {
+            deleteAllModal.style.display = "block";
+        }
+
+        function closeDeleteAllModal() {
+            deleteAllModal.style.display = "none";
+        }
     </script>
 </body>
 </html>
+</html>
+
