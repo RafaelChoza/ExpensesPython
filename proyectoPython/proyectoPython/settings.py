@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-hub$g6#zvd1ypmsh2e5@8d^&9v#pz+9-c07g+5g51s8%ft+^+5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [rafaelchoza.pythonanywheere.com]
 
 LOGIN_URL = "/admin/login/"
 
