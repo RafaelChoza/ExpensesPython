@@ -7,6 +7,12 @@ class MantenimientoForm(forms.ModelForm):
         label="Tecnico Asignado",
         widget=forms.Select(attrs={'class': 'form-select'})
     )
+
+    area =forms.ModelChoiceField(
+        queryset=Area.objects.all(),
+        label = 'Area',
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
     
     receptionDateTime = forms.DateTimeField(
         widget=forms.DateTimeInput(attrs={'type': 'datetime-local'})
