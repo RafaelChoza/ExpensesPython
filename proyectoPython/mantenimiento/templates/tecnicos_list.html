@@ -1,0 +1,10 @@
+<h1>Lista de Técnicos</h1>
+{% if tecnicos %}
+    <ul>
+        {% for tecnico in tecnicos %}
+            <li>{{ tecnico.nombreTecnico }} {{ tecnico.apellidoTecnico}}</li>  <!-- Cambia 'nombre' por un campo válido en tu modelo -->
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay técnicos registrados.</p>
+{% endif %}

@@ -1,0 +1,46 @@
+from django import forms
+from .models import Mantenimiento, Tecnico, Area
+
+class MantenimientoForm(forms.ModelForm):
+    personnelAsigned = forms.ModelChoiceField(
+        queryset= Tecnico.objects.all(),
+        label="Tecnico Asignado",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    
+    receptionDateTime = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'})
+    )
+    programmedDate = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'})
+    )
+    problemCuaseSolutionDate = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'})
+    )
+    closeDate = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'})
+    )
+
+    class Meta:
+        model = Mantenimiento
+        exclude = ['creationDateTime']  # Excluimos el campo no editable
+
+from django import forms
+from .models import Tecnico
+
+class TecnicoForm(forms.ModelForm):
+    class Meta:
+        model = Tecnico
+        fields = ['nombreTecnico', 'apellidoTecnico']
+        widgets = {
+            'nombreTecnico': forms.TextInput(attrs={'class': 'form-control'}),
+            'apellidoTecnico': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+class AreaForm(forms.ModelForm):
+    class Meta:
+        model = Area
+        fields = ['nombreArea']
+        widgets = {
+            'nombreArea': forms.TextInput(attrs={'class': 'form-ontrol'})
+        }

@@ -1,0 +1,10 @@
+<h1>Lista de Areas</h1>
+{% if areas %}
+    <ul>
+        {% for area in areas %}
+            <li>{{ area.nombreArea }} </li>  <!-- Cambia 'nombre' por un campo válido en tu modelo -->
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay areas registrados.</p>
+{% endif %}

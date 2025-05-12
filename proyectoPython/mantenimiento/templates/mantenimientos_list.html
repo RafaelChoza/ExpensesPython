@@ -1,0 +1,10 @@
+<h1>Lista de Mantenimientos</h1>
+{% if mantenimientos %}
+    <ul>
+        {% for mantenimiento in mantenimientos %}
+            <li>{{ mantenimiento.nombreTecnico }}</li>  <!-- Cambia 'nombre' por un campo válido en tu modelo -->
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay mantenimientos registrados.</p>
+{% endif %}

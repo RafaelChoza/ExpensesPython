@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-hub$g6#zvd1ypmsh2e5@8d^&9v#pz+9-c07g+5g51s8%ft+^+5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['rafaelchoza.pythonanywhere.com']
+ALLOWED_HOSTS = ['*']
 
 LOGIN_URL = "/admin/login/"
 
@@ -35,6 +35,7 @@ LOGIN_URL = "/admin/login/"
 INSTALLED_APPS = [
     'django.contrib.admin',
     'ecommerce.apps.EcommerceConfig',
+    'mantenimiento.apps.MantenimientoConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
