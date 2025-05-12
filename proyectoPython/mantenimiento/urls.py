@@ -11,4 +11,7 @@ urlpatterns = [
     path('tecnicos/edit/<int:pk>/', views.TecnicoUpdateView.as_view(), name='editTecnico'),
     path('areas/edit/<int:pk>/', views.AreaUpdateView.as_view(), name='editArea'),
     path('mantenimientos/edit/<int:pk>/', views.MantenimientoUpdateView.as_view(), name='editMantenimiento'),
+    path('tecnico/<int:pk>/delete/', views.TecnicoDeleteView.as_view(), name='tecnico_delete'),
+    path('area/<int:pk>/delete/', views.AreaDeleteView.as_view(), name='area_delete'),
+    path('mantenimiento/<int:pk>/delete/', views.MantenimientoDeleteView.as_view(), name='mantenimiento_delete'),
 ]

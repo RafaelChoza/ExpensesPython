@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from .forms import MantenimientoForm, TecnicoForm, AreaForm
 from django.views.generic import ListView, UpdateView, DeleteView
 from .models import Mantenimiento, Tecnico, Area
@@ -8,7 +9,7 @@ def mantenimiento_view(request):
         form = MantenimientoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/mantenimiento')  # Redirige a una página de éxito
+            return redirect('/mantenimiento/mantenimientos-list')  # Redirige a una página de éxito
     else:
         form = MantenimientoForm()
 
@@ -19,7 +20,7 @@ def tecnico_view(request):
         form = TecnicoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/mantenimiento')
+            return redirect('/mantenimiento/tecnicos-list/')
     else:
         form = TecnicoForm()
 
@@ -30,7 +31,7 @@ def area_view(request):
         form = AreaForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/mantenimiento/areas/')
+            return redirect('/mantenimiento/areas-list/')
     else:
         form = AreaForm()
 
@@ -77,3 +78,18 @@ class MantenimientoUpdateView(UpdateView):
     ]
     template_name = 'mantenimiento_form.html'
     success_url = '/mantenimiento'
+
+class TecnicoDeleteView(DeleteView):
+    model = Tecnico
+    template_name = 'tecnico_confirmar_eliminar.html'
+    success_url = reverse_lazy('tecnicosList')
+
+class AreaDeleteView(DeleteView):
+    model = Area
+    template_name = 'area_confirmar_eliminar.html'
+    success_url =  reverse_lazy('areasList')
+
+class MantenimientoDeleteView(DeleteView):
+    model = Mantenimiento
+    template_name = 'mantenimiento_confirmar_eliminar.html'
+    success_url = reverse_lazy('mantenimientosList')
