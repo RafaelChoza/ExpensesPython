@@ -18,15 +18,10 @@ class Mantenimiento(models.Model):
     scrapEquipment = models.BooleanField()
     needCalibration = models.BooleanField()
     problemCuaseSolutionDate = models.DateField()
-    usedParts1 = models.CharField(max_length=100)
-    partNumber1 = models.CharField(max_length=100)
-    description1 = models.TextField(max_length=200)
-    usedParts2 = models.CharField(max_length=100)
-    partNumber2 = models.CharField(max_length=100)
-    description2 = models.TextField(max_length=200) 
-    usedParts3 = models.CharField(max_length=100)
-    partNumber3 = models.CharField(max_length=100)
-    description3 = models.TextField(max_length=200)
+    resportedDate = models.DateField(null=True, blank=True)
+    tech = models.CharField(max_length=100)
+    timeServiceStart = models.DateTimeField(null=True, blank=True)
+    timeServiceEnd = models.DateTimeField(null=True, blank=True)
     coversInstalled = models.BooleanField()
     interlocksTested = models.BooleanField()
     gardsInstalled = models.BooleanField()
@@ -53,3 +48,9 @@ class Area(models.Model):
 
     def __str__(self):
         return f"{self.nombreArea}"
+    
+class ParteUsada(models.Model):
+    mantenimiento = models.ForeignKey(Mantenimiento, on_delete=models.CASCADE, related_name="partes")
+    cantidad = models.CharField(max_length=255)
+    numero_parte = models.CharField(max_length=100)
+    descripcion = models.TextField()

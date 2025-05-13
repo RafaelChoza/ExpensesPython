@@ -60,105 +60,189 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label>Solicitante</label>
-                    <input type="text" class="form-control" name="solicitante">
+                    <input type="text" class="form-control" name="requestorName">
                 </div>
                 <div class="col-md-6">
                     <label>Fecha y Hora de Solicitud</label>
-                    <input type="datetime-local" class="form-control" name="fecha_solicitud">
+                    <input type="datetime-local" class="form-control" name="creationDateTime">
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label>Código de Máquina</label>
-                    <input type="text" class="form-control" name="codigo_maquina">
+                    <input type="text" class="form-control" name="idMachine">
                 </div>
             <div class="mb-3">
-                <label for="area" class="form-label">Area</label>
+                <label for="area" class="form-label" name="area" >Area</label>
                 {{ form.area }}
             </div>
             </div>
             <div class="mb-3">
                 <label>¿Requiere Atención Inmediata?</label>
-                <select class="form-select" name="atencion_inmediata">
+                <select class="form-select" name="attentionRequired">
+                    <option value="si">Sí</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>¿Máquina detenida?</label>
+                <select class="form-select" name="machineStopped">
                     <option value="si">Sí</option>
                     <option value="no">No</option>
                 </select>
             </div>
             <div class="mb-3">
                 <label>Descripción del Problema</label>
-                <textarea class="form-control" name="descripcion_problema" rows="3"></textarea>
+                <textarea class="form-control" name="problemDescription" rows="3"></textarea>
             </div>
 
-            <div class="section-title">Datos del Supervisor de Mantenimiento</div>
+            <div class="section-title">Datos a llenar por Supervisor de Mantenimiento</div>
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label>Fecha y Hora de Recepción</label>
-                    <input type="datetime-local" class="form-control" name="fecha_recepcion">
-                </div>
-                <div class="col-md-6">
-                    <label>Firma de Recibido</label>
-                    <input type="text" class="form-control" name="firma_recepcion">
+                    <input type="datetime-local" class="form-control" name="receptionDateTime">
                 </div>
             </div>
-            
             <div class="mb-3">
-                <label for="id_personal_asignado" class="form-label">Personal Asignado</label>
+                <label for="personnelAsigned" name="personnelAsigned" class="form-label">Personal Asignado</label>
                 {{ form.personnelAsigned }}
             </div>
 
             <div class="mb-3">
                 <label>Fecha Programada</label>
-                <input type="date" class="form-control" name="fecha_programada">
+                <input type="date" class="form-control" name="programmedDate">
             </div>
             <div class="mb-3">
                 <label>Observaciones al Problema</label>
-                <textarea class="form-control" name="observaciones" rows="3"></textarea>
+                <textarea class="form-control" name="problemObservations" rows="3"></textarea>
             </div>
-
-            <div class="section-title">Datos del Técnico</div>
+            <div class="mb-3">
+                <label>Solución y causa del problema llenado por personal Asignado</label>
+                <textarea class="form-control" name="problemCuaseSolution" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label>
+                    ¿Equipo para desecho?
+                    <input type="checkbox" name="scrapEquipment" {% if objeto.scrapEquipment %}checked{% endif %}>
+                </label>
+            </div>
+            <div class="mb-3">
+                <label>
+                    ¿Notificación a calibración y MP?
+                    <input type="checkbox" name="needCalibration" {% if objeto.needCalibration %}checked{% endif %}>
+                </label>
+            </div>
+            <div class="col-md-4">
+                    <label>Fecha de Reporte</label>
+                    <input type="date" class="form-control" name="resportedDate">
+                </div>
+            <div class="section-title">Tiempo de servicio del Tecnico</div>
             <div class="row mb-3">
-                <div class="col-md-4">
-                    <label>Nombre del Técnico</label>
-                    <input type="text" class="form-control" name="tecnico">
+                <div class="mb-3">
+                <label for="personnelAsigned" name="tech" class="form-label">Nombre del Tecnico</label>
+                {{ form.tech }}
+            </div>
+                <div class="col-md-6">
+                    <label>Fecha y Hora de Inicio</label>
+                    <input type="datetime-local" class="form-control" name="timeServiceStart">
                 </div>
-                <div class="col-md-4">
-                    <label>Fecha de Inicio</label>
-                    <input type="date" class="form-control" name="fecha_inicio">
-                </div>
-                <div class="col-md-4">
-                    <label>Hora Final</label>
-                    <input type="time" class="form-control" name="hora_final">
+                <div class="col-md-6">
+                    <label>Fecha y Hora de Termino</label>
+                    <input type="datetime-local" class="form-control" name="timeServiceEnd">
                 </div>
             </div>
 
             <div class="section-title">Partes Usadas</div>
-            <div class="mb-3">
-                <textarea class="form-control" name="partes_usadas" rows="3" placeholder="Origen, # de parte, descripción"></textarea>
-            </div>
+                <div id="partes-container">
+                    <div class="mb-3">
+                        <label>Cantidad</label>
+                        <input type="text" class="form-control" name="cantidad[]">
+                        <label>Número de parte</label>
+                        <input type="text" class="form-control" name="numero_parte[]">
+                        <label>Descripción</label>
+                        <input type="text" class="form-control" name="descripcion[]">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary w-100 mt-3" onclick="agregarParte()">Agregar Parte</button>
 
             <div class="section-title">Revisión Final del Equipo</div>
-            <div class="mb-3">
-                <textarea class="form-control" name="revision_final" rows="3" placeholder="Cubiertas, interlocks, guardas, conexiones, limpieza, etc."></textarea>
-            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label>¿Cubiertas de equipo colocadas?</label>
+                            <input type="checkbox" name="coversInstalled" {% if objeto.coversInstalled %}checked{% endif %}>
+                        </div>
+                        <div class="mb-3">
+                            <label>Interlocks Probados?</label>
+                            <input type="checkbox" name="interlocksTested" {% if objeto.interlocksTested %}checked{% endif %}>
+                        </div>
+                        <div class="mb-3">
+                            <label>¿Guardas colocadas en equipo?</label>
+                            <input type="checkbox" name="gardsInstalled" {% if objeto.gardsInstalled %}checked{% endif %}>
+                        </div>
+                        <div class="mb-3">
+                            <label>¿Conexiones eléctricas adecuadas?</label>
+                            <input type="checkbox" name="electricalConexions" {% if objeto.electricalConexions %}checked{% endif %}>
+                        </div>
+                    </div>
 
-            <div class="section-title">Confirmación y Firma</div>
+                    
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label>¿Revisión completa del equipo?</label>
+                                <input type="checkbox" name="visualRevision" {% if objeto.visualRevision %}checked{% endif %}>
+                            </div>
+                            <div class="mb-3">
+                                <label>¿Limpieza del área?</label>
+                                <input type="checkbox" name="areaCleaned" {% if objeto.areaCleaned %}checked{% endif %}>
+                            </div>
+                            <div class="mb-3">
+                                <label>¿Conexión aire/gas/agua adecuadas?</label>
+                                <input type="checkbox" name="airGasWaterConexion" {% if objeto.airGasWaterConexion %}checked{% endif %}>
+                            </div>
+                            <div class="mb-3">
+                                <label>¿Etiquetas y señalización de equipo adecuadas?</label>
+                                <input type="checkbox" name="tagsInEquipment" {% if objeto.tagsInEquipment %}checked{% endif %}>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="section-title">Finalización</div>
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label>Firma del Supervisor</label>
-                    <input type="text" class="form-control" name="firma_supervisor">
+                    <label>Fecha de Finalización</label>
+                    <input type="date" class="form-control" name="closeDate">
                 </div>
-                <div class="col-md-6">
-                    <label>Fecha de Recepción</label>
-                    <input type="date" class="form-control" name="fecha_recepcion_final">
-                </div>
-            </div>
-            <div class="mb-3">
-                <label>Nombre y Firma de Quien Recibe</label>
-                <input type="text" class="form-control" name="firma_recibido">
-            </div>
-
             <button type="submit" class="btn btn-primary w-100 mt-3">Guardar</button>
         </form>
     </div>
 </body>
 </html>
+
+
+<script>
+function agregarParte() {
+    var container = document.getElementById("partes-container");
+
+    var nuevoDiv = document.createElement("div");
+    nuevoDiv.classList.add("mb-3");
+    nuevoDiv.innerHTML = `
+        <label>Cantidad</label>
+        <input type="text" class="form-control" name="cantidad[]">
+        <label>Número de parte</label>
+        <input type="text" class="form-control" name="numero_parte[]">
+        <label>Descripción</label>
+        <input type="text" class="form-control" name="descripcion[]">
+        <button type="button" class="btn btn-danger mt-2" onclick="eliminarParte(this)">Eliminar</button>
+    `;
+
+    // Agregar el nuevo div al contenedor
+    container.appendChild(nuevoDiv);
+}
+
+function eliminarParte(boton) {
+    boton.parentElement.remove();
+}
+</script>

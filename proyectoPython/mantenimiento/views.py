@@ -1,19 +1,28 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from .forms import MantenimientoForm, TecnicoForm, AreaForm
+from .forms import MantenimientoForm, ParteUsadaFormSet, TecnicoForm, AreaForm
 from django.views.generic import ListView, UpdateView, DeleteView
-from .models import Mantenimiento, Tecnico, Area
+from .models import Mantenimiento, ParteUsada, Tecnico, Area
 
 def mantenimiento_view(request):
     if request.method == 'POST':
         form = MantenimientoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('/mantenimiento/mantenimientos-list')  # Redirige a una página de éxito
+        formset = ParteUsadaFormSet(request.POST)
+
+        if form.is_valid() and formset.is_valid():
+            mantenimiento = form.save()  # Guarda el mantenimiento primero
+            partes = formset.save(commit=False)  # Evita que se guarden de inmediato
+            for parte in partes:
+                parte.mantenimiento = mantenimiento  # Asocia cada parte al mantenimiento
+                parte.save()  # Guarda cada parte usada
+                formset.save_m2m()  # Guarda muchas relaciones si aplica
+            return redirect('/mantenimiento/mantenimientos-list')  # Redirige después de guardar
+
     else:
         form = MantenimientoForm()
+        formset = ParteUsadaFormSet(queryset=ParteUsada.objects.none())  # Evita mostrar registros previos
 
-    return render(request, 'mantenimiento_form.html', {'form': form})
+    return render(request, 'mantenimiento_form.html', {'form': form, 'formset': formset})
 
 def tecnico_view(request):
     if request.method == 'POST':

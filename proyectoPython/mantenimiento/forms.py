@@ -1,5 +1,8 @@
 from django import forms
-from .models import Mantenimiento, Tecnico, Area
+from .models import Mantenimiento, Tecnico, Area, ParteUsada
+from django.forms import modelformset_factory
+
+ParteUsadaFormSet = modelformset_factory(ParteUsada, fields=("cantidad", "numero_parte", "descripcion"), extra=1)
 
 class MantenimientoForm(forms.ModelForm):
     personnelAsigned = forms.ModelChoiceField(
@@ -11,6 +14,12 @@ class MantenimientoForm(forms.ModelForm):
     area =forms.ModelChoiceField(
         queryset=Area.objects.all(),
         label = 'Area',
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
+    tech = forms.ModelChoiceField(
+        queryset=Tecnico.objects.all(),
+        label="Nombre del Tecnico",
         widget=forms.Select(attrs={'class': 'form-select'})
     )
     
@@ -31,8 +40,6 @@ class MantenimientoForm(forms.ModelForm):
         model = Mantenimiento
         exclude = ['creationDateTime']  # Excluimos el campo no editable
 
-from django import forms
-from .models import Tecnico
 
 class TecnicoForm(forms.ModelForm):
     class Meta:

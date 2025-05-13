@@ -37,7 +37,8 @@
         {% if mantenimientos %}
             <ul class="list-group">
                 {% for mantenimiento in mantenimientos %}
-                    <li class="list-group-item">{{ mantenimiento.nombreTecnico }}</li>
+                    <li class="list-group-item">{{ mantenimiento.requestorName }}</li>
+                    <li class="list-group-item">{{ mantenimiento.requestorLastName }}</li>
                 {% endfor %}
             </ul>
         {% else %}
